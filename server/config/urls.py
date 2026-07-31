@@ -23,8 +23,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('apps.users.urls', namespace='users')),
     path('api/stories/', include('apps.stories.urls', namespace='stories')),
+    path('api/qr/', include('apps.qr_codes.urls', namespace='qr_codes')),
+    path('api/gamification/', include('apps.gamification.urls', namespace='gamification')),
 ]
 
 # Serve media files in development
 if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

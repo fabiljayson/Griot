@@ -134,3 +134,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+
+# Luma AI Configuration
+LUMAAI_API_KEY = os.environ.get('LUMAAI_API_KEY', '')

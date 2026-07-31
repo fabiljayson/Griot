@@ -57,7 +57,7 @@ class ApiClient {
       final refreshToken = await _secureStorage.read(key: 'refresh_token');
       if (refreshToken == null) return false;
 
-      final response = await _refreshDio.post('/api/users/token/refresh/', data: {
+      final response = await _refreshDio.post('/users/token/refresh/', data: {
         'refresh': refreshToken,
       });
 

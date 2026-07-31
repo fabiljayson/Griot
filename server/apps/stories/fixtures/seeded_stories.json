@@ -1,0 +1,341 @@
+[
+  {
+    "model": "stories.category",
+    "pk": 1,
+    "fields": {
+      "name": "Kingdoms & Legends",
+      "slug": "kingdoms-legends",
+      "description": "Stories about African kingdoms, royal dynasties, and legendary rulers",
+      "category_type": "THEME",
+      "icon": "castle",
+      "color": "#8B4513",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 2,
+    "fields": {
+      "name": "Historical Landmarks",
+      "slug": "historical-landmarks",
+      "description": "Stories about significant historical sites and landmarks",
+      "category_type": "THEME",
+      "icon": "account_balance",
+      "color": "#2E5A44",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 3,
+    "fields": {
+      "name": "Forest & Nature Folklore",
+      "slug": "forest-nature-folklore",
+      "description": "Stories about forest-dwelling peoples and nature traditions",
+      "category_type": "THEME",
+      "icon": "forest",
+      "color": "#228B22",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 4,
+    "fields": {
+      "name": "Arts & Architecture",
+      "slug": "arts-architecture",
+      "description": "Stories about traditional arts, crafts, and architectural heritage",
+      "category_type": "THEME",
+      "icon": "palette",
+      "color": "#C85A32",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 5,
+    "fields": {
+      "name": "Traditional Ceremonies",
+      "slug": "traditional-ceremonies",
+      "description": "Stories about cultural ceremonies, rituals, and festivals",
+      "category_type": "THEME",
+      "icon": "celebration",
+      "color": "#DAA520",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 6,
+    "fields": {
+      "name": "West Region",
+      "slug": "west-region",
+      "description": "Stories from the West Region of Cameroon",
+      "category_type": "REGION",
+      "icon": "place",
+      "color": "#C85A32",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 7,
+    "fields": {
+      "name": "Northwest Region",
+      "slug": "northwest-region",
+      "description": "Stories from the Northwest Region of Cameroon",
+      "category_type": "REGION",
+      "icon": "place",
+      "color": "#2E5A44",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 8,
+    "fields": {
+      "name": "South Region",
+      "slug": "south-region",
+      "description": "Stories from the South Region of Cameroon",
+      "category_type": "REGION",
+      "icon": "place",
+      "color": "#228B22",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 9,
+    "fields": {
+      "name": "Far North Region",
+      "slug": "far-north-region",
+      "description": "Stories from the Far North Region of Cameroon",
+      "category_type": "REGION",
+      "icon": "place",
+      "color": "#DAA520",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.category",
+    "pk": 10,
+    "fields": {
+      "name": "National",
+      "slug": "national",
+      "description": "Stories covering all of Cameroon",
+      "category_type": "COUNTRY",
+      "icon": "flag",
+      "color": "#00778B",
+      "is_active": true,
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 1,
+    "fields": {
+      "title": "The Ancient Heritage of the Bamoun Kingdom in Foumban",
+      "slug": "heritage-bamoun-kingdom-foumban",
+      "subtitle": "UNESCO World Heritage Royal Palace and 600 Years of Artistic Heritage",
+      "summary": "Discover the magnificent Bamoun Kingdom, one of the oldest in Africa, home to a UNESCO World Heritage royal palace and over 600 years of artistic heritage.",
+      "content": "# The Ancient Heritage of the Bamoun Kingdom in Foumban\n\nLocated in the western region of Cameroon, the city of Foumban is the capital of the Nun Department and serves as the beating heart of the Bamoun Kingdom — one of the oldest and most storied kingdoms on the African continent. With a population of over 820,000 and an area spanning 7,700 km², Foumban covers nearly half of the entire Western Region.\n\n## The Royal Palace of Sultan Ibrahim Njoya\n\nThe crown jewel of Foumban is its magnificent Royal Palace, built in 1917 by the most famous Bamoun king, Sultan Ibrahim Njoya, who reigned from 1887 to 1933. This architectural marvel is today a **UNESCO World Heritage Site** — a testament to the extraordinary vision and cultural ambition of the Bamoun people.\n\nSultan Njoya was far more than a king. Around 1915, he created a secret language and alphabet that initially consisted of **500 letters**, and he devoted himself to making literacy accessible to all his subjects. He also synthesized a unique religion that blended elements of Islam, Christianity, and traditional Bamoun beliefs — a remarkable act of cultural synthesis in an era of colonial upheaval.\n\n## The Palace Museum\n\nBuilt in 1920, the Palace Museum is celebrated for its extraordinary collection of art and historical artifacts — a treasure trove unmatched in Central Africa. The museum houses over **three thousand works of art and historical pieces**, some dating back more than 600 years. These objects tell the epic story of the Bamoun dynasty through centuries of warfare, diplomacy, and cultural flowering.\n\nAmong the museum's most iconic treasures:\n\n- **Traditional royal headdresses** adorned with feathers and beads\n- **Ceremonial shields** forged in bronze and leather\n- **Dance masks** that guard the windows of the palace\n- **Bells, robes, and regalia** of the Bamoun sultans\n- **The two-headed serpent symbol**, representing royal power and spiritual duality\n- **Spider and bee motifs** — sacred symbols of hard work that inspire the museum's architecture\n\n## Craftsmanship: The Soul of the City\n\nFoumban enjoys international renown as the **\"City of Arts.\"** Handicraft is not merely a tradition here — it is the primary source of income for the population and the lifeblood of its youth. The craft village, located just 1 km from the city center, is the living symbol of the Bamoun people's artistic ingenuity.\n\nArtisans work daily in bronze casting, wood carving, weaving, pottery, and beadwork — skills passed down through generations since the founding of the kingdom. The Bamoun craftsmen produce pieces of astonishing quality: intricate bronze plaques, carved wooden thrones, and textiles dyed with natural pigments in patterns that encode ancestral stories.\n\n## The Central Mosque\n\nNear the Royal Palace stands the Foumban Central Mosque, built in 1958. With 80% of Foumban's population identifying as Muslim, the mosque is the most important religious monument in the city — yet it stands in harmonious proximity to the palace, a physical embodiment of the kingdom's tradition of religious tolerance and syncretism.\n\n## Mount Mbapit and Its Legends\n\nBetween Foumbot and Foumban rises Mount Mbapit, an extinct red volcano peaking at nearly 2,000 meters above sea level. At its summit lies a **crater lake** surrounded by sheer cliffs — a site steeped in legend.\n\nLocal lore holds that **stones thrown into the crater will never hit the water**. The lake remains forever undisturbed, as if protected by invisible forces. Visitors can climb the installed stairs along the steep slope to reach the crater's edge, where the circular lake occupies the bottom of the volcanic bowl like a mirror of the sky.\n\n## A Living Kingdom\n\nBefore colonization, the Bamoun Kingdom was a sovereign micro-state with its own military, diplomacy, and judicial systems. Though now part of the modern state of Cameroon, the kingdom remains alive and vibrant — its traditions enriched, not diminished, by the passage of time.\n\nVisitors to Foumban on a **Friday** may have the rare privilege of meeting the current Sultan and his nobles, joining them for Friday prayers in a ceremony that bridges centuries of unbroken tradition.",
+      "country": "Cameroon",
+      "region": "West Region",
+      "culture": "Bamoun",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [1, 6]
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 2,
+    "fields": {
+      "title": "Dschang: Gateway to Bamiléké Civilization and Heritage",
+      "slug": "dschang-bamileke-civilization-heritage",
+      "subtitle": "The Historic Land of Palavers",
+      "summary": "Explore Dschang, the historic 'Land of Palavers,' home to the Museum of Civilizations and the magnificent Bamiléké traditional chiefdoms of Bafou, Fongo-Tongo, and Foreké.",
+      "content": "# Dschang: Gateway to Bamiléké Civilization and Heritage\n\nDschang is a city steeped in history — discovered by the German officer Zingraft during a military expedition in 1895 and formally established as a colonial settlement in 1903. The name \"Dschang\" itself means **\"Terre à palabres\"** — the Land of Palavers — a fitting title for a city that has served as a crossroads of cultures, diplomacy, and trade for over a century.\n\n## The Museum of Civilizations\n\nOpened in 2010 as a cooperative project between the cities of Nantes (France) and Dschang, the **Musée des Civilisations** is a 1,000 m² space dedicated to the layered histories of Cameroon and its peoples. The museum is organized into thematic sections:\n\n- **History** — tracing the deep past of Cameroon's ethnic groups\n- **Slavery** — documenting the devastating impact of the transatlantic slave trade\n- **Colonization** — exploring the German, French, and British colonial periods\n- **Cultures** — celebrating the living traditions of Cameroon's diverse communities\n\nThe museum's collection includes artifacts, photographs, oral history recordings, and reconstructed living spaces that bring each era to vivid life.\n\n## The Dschang Market\n\nBuilt by the French in 1916, the Dschang Market is a vibrant testament to the city's artistic soul. Its **traditional architecture** — with sweeping thatched roofs and open-air stalls — creates a welcoming space where artisans display their work daily:\n\n- **Weavers** producing cloth in the traditional Bamiléké patterns\n- **Potters** shaping vessels using techniques unchanged for centuries\n- **Woodcarvers** creating masks and figurines that encode cultural narratives\n- **Food vendors** offering regional delicacies and traditional dishes\n\n## Traditional Chiefdoms\n\nThe true glory of Dschang lies in the **traditional chiefdoms** that dot its surrounding hills — living embodiments of Bamiléké governance and spiritual tradition:\n\n- **Bafou Chiefdom** — a powerful traditional authority with its own palace and court\n- **Fongo-Tongo Chiefdom** — known for its sacred waterfall, the Mamy Wata Falls, which cascade 82 meters into the valley below\n- **Foreké Chiefdom** — perched dramatically on a cliff, offering commanding views of the surrounding landscape\n\nThese chiefdoms represent the ancient political system of the Bamiléké people — a decentralized network of kingdoms, each governed by a **Fô'o** (king) advised by a council of notables and guided by spiritual diviners.",
+      "country": "Cameroon",
+      "region": "West Region",
+      "culture": "Bamiléké",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [2, 6]
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 3,
+    "fields": {
+      "title": "The Grassfields Kingdoms of Bamenda",
+      "slug": "grassfields-kingdoms-bamenda",
+      "subtitle": "Lakes, Legends, and Living Traditions",
+      "summary": "Journey through the Grassfields of Bamenda, where ancient kingdoms like Bali and Bafut guard crater lakes, sacred waterfalls, and traditions that have endured for centuries.",
+      "content": "# The Grassfields Kingdoms of Bamenda: Lakes, Legends, and Living Traditions\n\nAt an altitude of 1,550 meters above sea level, Bamenda is the capital of Cameroon's Northwest Region — a city where modernity and tradition exist in seamless harmony. The surrounding landscape is a breathtaking tapestry of high plateaus, mountain ranges, deep valleys, rivers, waterfalls, and crater lakes that together create one of Africa's most captivating cultural landscapes.\n\n## The Sacred Lakes\n\nThe Grassfields are dotted with crater lakes, each carrying deep spiritual significance:\n\n- **Lake Awing** — located just 7 km from Bamenda, this volcanic crater lake is considered sacred by the local community\n- **Lake Oku** — perched high on Mount Oku at over 2,200 meters, one of Africa's highest lakes\n- **Lake Nyos** — the famous lake known worldwide for the 1986 limnic eruption\n\n## The Bali Chiefdom\n\nLocated about 20 km from Bamenda, the **Bali Chiefdom** is one of the most historically significant kingdoms in the Grassfields. The Bali people migrated to this region in the 17th century, bringing with them traditions rooted in the ancient Bamoun Kingdom.\n\n## The Bafut Chiefdom\n\nAbout 16 km from Bamenda lies the **Bafut Chiefdom** — one of the most powerful traditional kingdoms in the Northwest Region. The Bafut are renowned for their elaborate annual festivals featuring masquerade dances and their exceptional woodcarving tradition.",
+      "country": "Cameroon",
+      "region": "Northwest Region",
+      "culture": "Grassfields",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [1, 7]
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 4,
+    "fields": {
+      "title": "The Baka Pygmies: Guardians of the Dja Forest",
+      "slug": "baka-pygmies-guardians-dja-forest",
+      "subtitle": "UNESCO World Heritage Dja Reserve",
+      "summary": "Meet the Baka pygmy people, the oldest forest dwellers of Cameroon, who live in harmony with the UNESCO World Heritage Dja Reserve — guardians of ancient knowledge and spiritual traditions.",
+      "content": "# The Baka Pygmies: Guardians of the Dja Forest\n\nDeep in the equatorial forests of southern Cameroon, where the Dja River winds through one of Africa's largest intact rainforests, live the **Baka pygmies** — the oldest forest dwellers in Cameroon and among the most ancient peoples of the Congo Basin.\n\n## The Dja Reserve: A World Heritage Wilderness\n\nThe **Dja Faunal Reserve**, created in 1950, spans nearly **526,000 hectares** of dense tropical rainforest — 90% of it still pristine and undisturbed. In 1987, UNESCO designated it a **World Heritage Site**.\n\nWithin its borders:\n- **107 species of mammals** inhabit the forest\n- **14 species of primates** live in the canopy, including the critically endangered western lowland gorilla\n- An estimated **6,500 gorillas** and **3,600 chimpanzees** call the reserve home\n\n## The Baka People: Children of the Forest\n\nThe Baka are characterized by:\n\n- Their **ancient rites and traditions** passed down through countless generations\n- Their **mesmerizing polyphonic singing** — recognized as one of the most complex vocal traditions in the world\n- Their **magic dances** performed in firelight, connecting the community to the spirits of the forest\n- Their **traditional medicine**, using hundreds of forest plants for healing\n\n## The Djengui Dance\n\nThe **Djengui dance** is the Baka's most sacred ceremonial practice. Performed at night in the flickering light of forest fires, the dance establishes a direct connection with the spirit of the forest.",
+      "country": "Cameroon",
+      "region": "South Region",
+      "culture": "Baka",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [3, 8]
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 5,
+    "fields": {
+      "title": "Rhumsiki: The Lunar Landscape of the Kapsiki People",
+      "slug": "rhumsiki-lunar-landscape-kapsiki",
+      "subtitle": "Volcanic Peaks and Ancient Traditions",
+      "summary": "Explore Rhumsiki, a village of towering volcanic peaks and ancient Kapsiki traditions, where a Crab Wizard predicts the future and the Mousgoum build Africa's tallest mud huts.",
+      "content": "# Rhumsiki: The Lunar Landscape of the Kapsiki People\n\nIn the heart of the Mandara Mountains, near Cameroon's border with Nigeria, lies **Rhumsiki** — a picturesque village of fewer than 5,000 inhabitants that occupies one of the most extraordinary landscapes on Earth.\n\n## The Peaks of Rhumsiki\n\nRhumsiki sits on a high plateau where **huge lava peaks** rise dramatically toward the sky. The most famous is **Mchirgué**, which rises to **1,224 meters** and dominates the landscape like a stone sentinel.\n\nWriter and explorer André Gide wrote that the landscapes of Rhumsiki are **\"among the most beautiful landscapes in the world.\"**\n\n## The Crab Wizard\n\nThe **Crab Wizard** is Rhumsiki's most famous attraction. He is a blacksmith who **predicts the future using crabs**. Tourists and locals come early in the morning to consult the wizard about harvests, marriages, health, and the future.\n\n## The Mousgoum Mud Huts\n\nIn the nearby village of **Pouss**, the Mousgoum people have created one of Africa's most remarkable architectural traditions — the **Mousgoum mud huts**. These huts are among the **tallest and most beautiful in Africa**, with conical, shell-shaped forms and ribbed exteriors.",
+      "country": "Cameroon",
+      "region": "Far North Region",
+      "culture": "Kapsiki",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [4, 9]
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 6,
+    "fields": {
+      "title": "Kribi: Where Waterfalls Meet the Atlantic",
+      "slug": "kribi-waterfalls-atlantic-pygmies",
+      "subtitle": "Golden Beaches and Ancient Traditions",
+      "summary": "Discover Kribi's golden beaches, the world-famous Lobé Waterfalls cascading into the Atlantic, and the ancient Pygmy encampments where forest traditions live on.",
+      "content": "# Kribi: Where Waterfalls Meet the Atlantic and Pygmies Dance in Firelight\n\nOn the Gulf of Guinea, about 150 km from Douala, lies **Kribi** — a coastal town that serves as Cameroon's premier seaside destination.\n\n## The Lobé Waterfalls: A World Wonder\n\nJust 7 km from the town, the magnificent **Lobé Waterfalls** cascade from a height of 20 meters — and they hold a unique distinction: they are **the only waterfalls in the world that flow directly into the Atlantic Ocean**.\n\n## The Pygmy Encampments\n\nA few kilometers from the Lobé Waterfalls, visitors can experience **Pygmy encampments** where forest-dwelling peoples maintain their ancient traditions.\n\n## Bimbia: Echoes of the Slave Trade\n\nOn the shores of the Atlantic lies **Bimbia** — a historic site that still bears the physical traces of the transatlantic slave trade, including buildings where enslaved people were kept and chains used by the slavers.",
+      "country": "Cameroon",
+      "region": "South Region",
+      "culture": "Bakweri",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [3, 8]
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 7,
+    "fields": {
+      "title": "Waza National Park: Lions of the Sahel",
+      "slug": "waza-national-park-lions-sahel",
+      "subtitle": "UNESCO Biosphere Reserve",
+      "summary": "Explore Waza National Park, a UNESCO Biosphere Reserve in the Sahel savannah where lions, elephants, and giraffes roam — the wild heart of Cameroon's Far North.",
+      "content": "# Waza National Park: Lions of the Sahel and the Far North's Wild Heart\n\nIn the Far North Region of Cameroon, where the Sahel meets the Sudan savannah, lies **Waza National Park** — one of Central and West Africa's most important wildlife sanctuaries.\n\n## A Park Born from Empire\n\nWaza was created in **1934** as a hunting reserve and designated a **UNESCO Biosphere Reserve in 1979**. The park covers **170,000 hectares** of semi-arid landscape.\n\n## The Lions of Waza\n\nThe park is home to 30 species of mammals, including:\n\n- **Lions** — the park's most iconic residents\n- **African bush elephants** — graceful giants moving through the acacia woodland\n- **West African giraffes** — a subspecies found only in the Sahel region\n\n## A Sky Full of Birds\n\nWaza is a **birdwatcher's paradise**, with 379 species recorded in the park.",
+      "country": "Cameroon",
+      "region": "Far North Region",
+      "culture": "Sahel",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [3, 9]
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 8,
+    "fields": {
+      "title": "Kingdoms of the Highlands: Sacred Lands",
+      "slug": "kingdoms-highlands-sacred-lands",
+      "subtitle": "A Journey Through Cameroon's Sacred Lands",
+      "summary": "Follow the ancient paths of the Bamiléké and Bamoun peoples through sacred lakes, mysterious forests, and powerful chiefdoms where the Fô'o still reigns.",
+      "content": "# Kingdoms of the Highlands: A Journey Through Cameroon's Sacred Lands\n\nThe Western Highlands of Cameroon — known as the **\"Cultural Capital\"** of the country — are home to some of Africa's most extraordinary living traditions.\n\n## The Sacred Lakes\n\n- **Lake Baleng** — considered sacred, a site of pilgrimage and purification\n\n## The Sacred Forests\n\n- **Foreke-Dschang** — protected by the community for generations\n- **Santchou** — where the boundary between the human and spirit worlds is believed to be thin\n\n## The Waterfalls of Power\n\n- **Metche Falls** — a 50-meter cascade, a place of pilgrimage\n- **Mamy Wata Falls** — an 82-meter waterfall associated with the water spirit\n- **Ekom-Kam Falls** — made famous as a filming location for *Greystoke: The Legend of Tarzan*\n\n## The Chiefdoms: Living Governments\n\nBefore colonization, the Bamoum and Bamiléké kingdoms were **sovereign micro-states** with their own armies, courts, and diplomatic systems.\n\n### Bandjoun\nOne of the largest chiefdoms in the West Region, the Bandjoun Kingdom is **three centuries old** and has nearly 200,000 members.",
+      "country": "Cameroon",
+      "region": "West Region",
+      "culture": "Bamiléké",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [5, 6]
+    }
+  },
+  {
+    "model": "stories.story",
+    "pk": 9,
+    "fields": {
+      "title": "Cameroon: Africa in Miniature",
+      "slug": "cameroon-africa-in-miniature-discovery",
+      "subtitle": "A Land of Endless Discovery",
+      "summary": "An overview of Cameroon, the 'Africa in Miniature,' where 250+ ethnic groups, diverse ecosystems, and ancient kingdoms converge in a single extraordinary nation.",
+      "content": "# Cameroon: Africa in Miniature — A Land of Endless Discovery\n\nAlso known as **\"Africa in Miniature\"**, Cameroon is gifted with diverse socio-cultural, ethnographic, ecological, geographical, and anthropological endowments.\n\n## Culture: A Tapestry of 250+ Ethnic Groups\n\nCameroon has a huge, unique culture, illustrated by its:\n\n- **Traditional architecture** — from the mud huts of the Mousgoum to the palaces of the Bamoun\n- **Cuisine** — a rich culinary tradition reflecting the country's diverse ethnic groups\n- **Festivals** — annual celebrations that bring entire communities together\n- **Arts and crafts** — woodcarving, bronze casting, weaving, pottery, and beadwork\n\n## The Landscapes\n\n### Mountains\n- **Mount Cameroon (4,100 m)** — the highest peak in West Africa\n- **Rhumsiki (1,224 m)** — a lunar landscape of volcanic peaks\n\n### The Coast\n- **400 km** of coastline with black sand beaches (Limbe) and golden-gray sand (Kribi)\n- The **Lobé Falls** — the only waterfall in the world that flows directly into the Atlantic Ocean\n\n### The Forests\n- **27 hunting areas** covering 4,551,990 hectares\n- Dense tropical rainforests harboring gorillas, chimpanzees, and forest elephants\n\n## The People\n\nWith over 250 ethnic groups, each with their own language, traditions, and identity, Cameroon is a living laboratory of human diversity.",
+      "country": "Cameroon",
+      "region": "National",
+      "culture": "Cameroonian",
+      "language_original": "en",
+      "status": "PUBLISHED",
+      "view_count": 0,
+      "published_at": "2025-01-15T10:00:00Z",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z",
+      "categories": [2, 10]
+    }
+  }
+]

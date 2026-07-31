@@ -13,4 +13,7 @@ router.register(r'ai-content', views.AIContentViewSet, basename='ai-content')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('stories/<int:pk>/generate-video/', views.VideoGenerationView.as_view(), name='generate-video'),
+    path('stories/<int:pk>/video-status/', views.VideoStatusView.as_view(), name='video-status'),
+    path('stories/<int:pk>/reset-video/', views.VideoResetView.as_view(), name='reset-video'),
 ]

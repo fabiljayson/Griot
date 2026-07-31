@@ -27,7 +27,7 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      final response = await _dio.post('/api/users/token/', data: {
+      final response = await _dio.post('/users/token/', data: {
         'username': username,
         'password': password,
       });
@@ -57,7 +57,7 @@ class AuthRepository {
     String? country,
   }) async {
     try {
-      final response = await _dio.post('/api/users/register/', data: {
+      final response = await _dio.post('/users/register/', data: {
         'username': username,
         'email': email,
         'password': password,
@@ -78,7 +78,7 @@ class AuthRepository {
   /// Get current user profile
   Future<UserModel> getProfile() async {
     try {
-      final response = await _dio.get('/api/users/profile/');
+      final response = await _dio.get('/users/profile/');
       final user = UserModel.fromJson(response.data);
 
       // Cache user data
@@ -104,7 +104,7 @@ class AuthRepository {
       if (bio != null) data['bio'] = bio;
       if (country != null) data['country'] = country;
 
-      final response = await _dio.patch('/api/users/profile/', data: data);
+      final response = await _dio.patch('/users/profile/', data: data);
       final user = UserModel.fromJson(response.data);
 
       await _saveUserData(user);
@@ -121,7 +121,7 @@ class AuthRepository {
     required String newPassword,
   }) async {
     try {
-      await _dio.put('/api/users/change-password/', data: {
+      await _dio.put('/users/change-password/', data: {
         'old_password': oldPassword,
         'new_password': newPassword,
       });

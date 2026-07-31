@@ -9,6 +9,10 @@ import 'features/authentication/presentation/bloc/auth_bloc.dart';
 import 'features/authentication/presentation/screens/login_screen.dart';
 import 'features/authentication/presentation/screens/register_screen.dart';
 import 'features/authentication/presentation/screens/home_screen.dart';
+import 'features/qr_engine/data/repositories/qr_repository.dart';
+import 'features/qr_engine/presentation/bloc/qr_bloc.dart';
+import 'features/qr_engine/presentation/screens/qr_scanner_screen.dart';
+import 'features/qr_engine/presentation/screens/qr_manager_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,30 +23,47 @@ void main() async {
   // Initialize API client with secure storage
   final apiClient = ApiClient(secureStorage: secureStorage);
 
-  // Initialize auth repository
+  // Initialize repositories
   final authRepository = AuthRepository(
     dio: apiClient.dio,
     secureStorage: secureStorage,
   );
+  final qrRepository = QRRepository(dio: apiClient.dio);
 
-  runApp(MyApp(authRepository: authRepository));
+  runApp(MyApp(
+    authRepository: authRepository,
+    qrRepository: qrRepository,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository;
+  final QRRepository qrRepository;
 
-  const MyApp({super.key, required this.authRepository});
+  const MyApp({
+    super.key,
+    required this.authRepository,
+    required this.qrRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authRepository),
+        RepositoryProvider.value(value: qrRepository),
       ],
-      child: BlocProvider(
-        create: (context) => AuthBloc(
-          authRepository: authRepository,
-        )..add(AuthCheckRequested()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthBloc(
+              authRepository: authRepository,
+            )..add(AuthCheckRequested()),
+          ),
+          BlocProvider(
+            create: (context) => QRBloc(repository: qrRepository),
+          ),
+        ],
         child: MaterialApp(
           title: 'African Teller',
           debugShowCheckedModeBanner: false,
@@ -52,6 +73,8 @@ class MyApp extends StatelessWidget {
             '/login': (context) => const LoginScreen(),
             '/register': (context) => const RegisterScreen(),
             '/home': (context) => const HomeScreen(),
+            '/qr-scanner': (context) => const QRScannerScreen(),
+            '/qr-manager': (context) => const QRManagerScreen(),
           },
         ),
       ),

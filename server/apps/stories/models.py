@@ -51,6 +51,12 @@ class Story(models.Model):
         PUBLISHED = 'PUBLISHED', 'Published'
         ARCHIVED = 'ARCHIVED', 'Archived'
 
+    class VideoStatus(models.TextChoices):
+        IDLE = 'idle', 'Idle'
+        PROCESSING = 'processing', 'Processing'
+        COMPLETED = 'completed', 'Completed'
+        FAILED = 'failed', 'Failed'
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True)
     subtitle = models.CharField(max_length=300, blank=True)
@@ -109,6 +115,25 @@ class Story(models.Model):
         null=True,
         validators=[FileExtensionValidator(allowed_extensions=['mp4', 'webm', 'mov'])],
         help_text='Video content for the story',
+    )
+    
+    # Luma AI Video Generation
+    video_generation_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Luma AI generation ID for tracking video generation',
+    )
+    video_status = models.CharField(
+        max_length=20,
+        choices=VideoStatus.choices,
+        default=VideoStatus.IDLE,
+        help_text='Current status of AI video generation',
+    )
+    video_url = models.URLField(
+        blank=True,
+        null=True,
+        help_text='URL of the generated AI video',
     )
     
     # Metadata
