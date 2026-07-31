@@ -1,19 +1,25 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user_model.dart';
 
 class AuthRepository {
   final Dio _dio;
-  final SharedPreferences _prefs;
+  final FlutterSecureStorage _secureStorage;
 
-  AuthRepository({required Dio dio, required SharedPreferences prefs})
+  AuthRepository({required Dio dio, required FlutterSecureStorage secureStorage})
       : _dio = dio,
-        _prefs = prefs;
+        _secureStorage = secureStorage;
 
-  // Token keys
+  // Storage keys
   static const String _accessTokenKey = 'access_token';
   static const String _refreshTokenKey = 'refresh_token';
-  static const String _userKey = 'user_data';
+  static const String _userIdKey = 'user_id';
+  static const String _userUsernameKey = 'user_username';
+  static const String _userEmailKey = 'user_email';
+  static const String _userFirstNameKey = 'user_first_name';
+  static const String _userLastNameKey = 'user_last_name';
+  static const String _userPointsKey = 'user_points';
+  static const String _userLevelKey = 'user_level';
 
   /// Login with username and password
   Future<UserModel> login({
@@ -74,10 +80,10 @@ class AuthRepository {
     try {
       final response = await _dio.get('/api/users/profile/');
       final user = UserModel.fromJson(response.data);
-      
+
       // Cache user data
       await _saveUserData(user);
-      
+
       return user;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -100,9 +106,9 @@ class AuthRepository {
 
       final response = await _dio.patch('/api/users/profile/', data: data);
       final user = UserModel.fromJson(response.data);
-      
+
       await _saveUserData(user);
-      
+
       return user;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -124,102 +130,73 @@ class AuthRepository {
     }
   }
 
-  /// Refresh access token
-  Future<void> refreshAccessToken() async {
-    final refreshToken = _prefs.getString(_refreshTokenKey);
-    if (refreshToken == null) {
-      throw Exception('No refresh token available');
-    }
-
-    // Use a separate Dio instance without interceptors to avoid circular refresh
-    final refreshDio = Dio(BaseOptions(
-      baseUrl: _dio.options.baseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    ));
-
-    try {
-      final response = await refreshDio.post('/api/users/token/refresh/', data: {
-        'refresh': refreshToken,
-      });
-
-      final newAccessToken = response.data['access'];
-      await _prefs.setString(_accessTokenKey, newAccessToken);
-    } on DioException catch (e) {
-      // If refresh fails, logout
-      await logout();
-      throw Exception('Session expired. Please login again.');
-    }
-  }
-
   /// Logout and clear tokens
   Future<void> logout() async {
-    await _prefs.remove(_accessTokenKey);
-    await _prefs.remove(_refreshTokenKey);
-    await _prefs.remove(_userKey);
+    await _secureStorage.delete(key: _accessTokenKey);
+    await _secureStorage.delete(key: _refreshTokenKey);
+    await _secureStorage.delete(key: _userIdKey);
+    await _secureStorage.delete(key: _userUsernameKey);
+    await _secureStorage.delete(key: _userEmailKey);
+    await _secureStorage.delete(key: _userFirstNameKey);
+    await _secureStorage.delete(key: _userLastNameKey);
+    await _secureStorage.delete(key: _userPointsKey);
+    await _secureStorage.delete(key: _userLevelKey);
   }
 
   /// Check if user is authenticated by checking if tokens exist
   Future<bool> isAuthenticated() async {
-    final token = _prefs.getString(_accessTokenKey);
-    final refreshToken = _prefs.getString(_refreshTokenKey);
+    final token = await _secureStorage.read(key: _accessTokenKey);
+    final refreshToken = await _secureStorage.read(key: _refreshTokenKey);
     return token != null && refreshToken != null;
   }
 
   /// Get cached user data
   Future<UserModel?> getCachedUser() async {
-    final userId = _prefs.getInt('user_id');
-    final username = _prefs.getString('user_username');
-    final email = _prefs.getString('user_email');
-    
-    if (userId == null || username == null || email == null) {
+    final userIdStr = await _secureStorage.read(key: _userIdKey);
+    final username = await _secureStorage.read(key: _userUsernameKey);
+    final email = await _secureStorage.read(key: _userEmailKey);
+
+    if (userIdStr == null || username == null || email == null) {
       return null;
     }
-    
-    // Return a minimal user model from cache
-    // Full profile will be fetched from API
+
+    final userId = int.tryParse(userIdStr) ?? 0;
+
     return UserModel(
       id: userId,
       username: username,
       email: email,
-      firstName: _prefs.getString('user_first_name') ?? '',
-      lastName: _prefs.getString('user_last_name') ?? '',
-      role: UserRole.visitor, // Default, will be updated on refresh
-      points: _prefs.getInt('user_points') ?? 0,
-      level: _prefs.getInt('user_level') ?? 1,
-      createdAt: DateTime.now(),
+      firstName: await _secureStorage.read(key: _userFirstNameKey) ?? '',
+      lastName: await _secureStorage.read(key: _userLastNameKey) ?? '',
+      role: UserRole.visitor,
+      points: int.tryParse(await _secureStorage.read(key: _userPointsKey) ?? '0') ?? 0,
+      level: int.tryParse(await _secureStorage.read(key: _userLevelKey) ?? '1') ?? 1,
+      createdAt: DateTime(2000), // Sentinel: cached user, actual createdAt unknown
     );
   }
 
   /// Save tokens to secure storage
   Future<void> _saveTokens(String accessToken, String refreshToken) async {
-    await _prefs.setString(_accessTokenKey, accessToken);
-    await _prefs.setString(_refreshTokenKey, refreshToken);
+    await _secureStorage.write(key: _accessTokenKey, value: accessToken);
+    await _secureStorage.write(key: _refreshTokenKey, value: refreshToken);
   }
 
-  /// Save user data to cache
+  /// Save user data to secure storage
   Future<void> _saveUserData(UserModel user) async {
-    await _prefs.setInt('user_id', user.id);
-    await _prefs.setString('user_username', user.username);
-    await _prefs.setString('user_email', user.email);
-    await _prefs.setString('user_first_name', user.firstName);
-    await _prefs.setString('user_last_name', user.lastName);
-    await _prefs.setInt('user_points', user.points);
-    await _prefs.setInt('user_level', user.level);
+    await _secureStorage.write(key: _userIdKey, value: user.id.toString());
+    await _secureStorage.write(key: _userUsernameKey, value: user.username);
+    await _secureStorage.write(key: _userEmailKey, value: user.email);
+    await _secureStorage.write(key: _userFirstNameKey, value: user.firstName);
+    await _secureStorage.write(key: _userLastNameKey, value: user.lastName);
+    await _secureStorage.write(key: _userPointsKey, value: user.points.toString());
+    await _secureStorage.write(key: _userLevelKey, value: user.level.toString());
   }
-
-
 
   /// Handle Dio errors
   Exception _handleError(DioException e) {
     if (e.response != null) {
-      final statusCode = e.response!.statusCode;
       final data = e.response!.data;
-      
+
       String message = 'An error occurred';
       if (data is Map<String, dynamic>) {
         if (data.containsKey('detail')) {
@@ -227,7 +204,6 @@ class AuthRepository {
         } else if (data.containsKey('non_field_errors')) {
           message = (data['non_field_errors'] as List).join(', ');
         } else {
-          // Field errors
           final errors = <String>[];
           data.forEach((key, value) {
             if (value is List) {
@@ -239,7 +215,7 @@ class AuthRepository {
           }
         }
       }
-      
+
       return Exception(message);
     } else if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout) {
@@ -247,7 +223,7 @@ class AuthRepository {
     } else if (e.type == DioExceptionType.connectionError) {
       return Exception('No internet connection.');
     }
-    
+
     return Exception('An unexpected error occurred.');
   }
 }

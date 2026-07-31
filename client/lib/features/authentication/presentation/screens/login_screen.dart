@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../bloc/auth_bloc.dart';
-import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,16 +11,42 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  late AnimationController _animController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _animController,
+      curve: Curves.easeIn,
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.15),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animController,
+      curve: Curves.easeOutCubic,
+    ));
+    _animController.forward();
+  }
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _animController.dispose();
     super.dispose();
   }
 
@@ -35,48 +61,61 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: AppTheme.parchment,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: AppTheme.errorColor,
+                backgroundColor: AppTheme.terracotta,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
             );
           } else if (state is AuthAuthenticated) {
-            // Navigation will be handled by the main app
             Navigator.of(context).pushReplacementNamed('/home');
           }
         },
         child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Logo and Title
-                  _buildHeader(),
-                  const SizedBox(height: 48),
-                  
-                  // Login Form
-                  _buildLoginForm(),
-                  const SizedBox(height: 24),
-                  
-                  // Login Button
-                  _buildLoginButton(),
-                  const SizedBox(height: 24),
-                  
-                  // Register Link
-                  _buildRegisterLink(),
-                ],
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: SizedBox(
+                  height: size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // ── Logo & Title ──
+                      _buildHeader(),
+                      const SizedBox(height: 48),
+
+                      // ── Login Form ──
+                      _buildLoginForm(),
+                      const SizedBox(height: 24),
+
+                      // ── Login Button ──
+                      _buildLoginButton(),
+                      const SizedBox(height: 16),
+
+                      // ── Divider ──
+                      _buildDivider(),
+                      const SizedBox(height: 16),
+
+                      // ── Register Link ──
+                      _buildRegisterLink(),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -88,44 +127,52 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildHeader() {
     return Column(
       children: [
-        // Logo Container
+        // Ornamental Manuscript Circle
         Container(
-          width: 100,
-          height: 100,
+          width: 110,
+          height: 110,
           decoration: BoxDecoration(
-            color: AppTheme.primaryColor,
             shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              colors: [AppTheme.terracotta, AppTheme.ochre],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primaryColor.withOpacity(0.3),
-                blurRadius: 20,
+                color: AppTheme.terracotta.withOpacity(0.35),
+                blurRadius: 24,
                 offset: const Offset(0, 10),
               ),
             ],
           ),
           child: const Icon(
-            Icons.auto_stories,
-            size: 50,
+            Icons.auto_stories_rounded,
+            size: 56,
             color: Colors.white,
           ),
         ),
-        const SizedBox(height: 24),
-        
-        // Title
+        const SizedBox(height: 28),
+
+        // App Name
         Text(
           'African Teller',
-          style: AppTheme.headingLarge.copyWith(
-            color: AppTheme.primaryColor,
+          style: GoogleFonts.notoSerif(
             fontSize: 36,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.terracotta,
+            letterSpacing: 1,
           ),
         ),
         const SizedBox(height: 8),
-        
-        // Subtitle
+
+        // Tagline
         Text(
           'Discover African Cultural Heritage',
-          style: AppTheme.bodyLarge.copyWith(
-            color: AppTheme.textSecondary,
+          style: GoogleFonts.notoSans(
+            fontSize: 15,
+            color: AppTheme.warmGray,
+            letterSpacing: 0.5,
           ),
         ),
       ],
@@ -136,61 +183,62 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         final isLoading = state is AuthLoading;
-        
+
         return Form(
           key: _formKey,
           child: Column(
             children: [
-              // Username Field
+              // Username
               TextFormField(
                 controller: _usernameController,
                 enabled: !isLoading,
+                textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   labelText: 'Username',
                   hintText: 'Enter your username',
-                  prefixIcon: const Icon(Icons.person_outline),
+                  prefixIcon: const Icon(Icons.person_outline_rounded),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  fillColor: AppTheme.surfaceColor,
+                  fillColor: AppTheme.ivory,
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Please enter your username';
                   }
                   return null;
                 },
-                textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
-              
-              // Password Field
+
+              // Password
               TextFormField(
                 controller: _passwordController,
                 enabled: !isLoading,
                 obscureText: _obscurePassword,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => _onLogin(),
                 decoration: InputDecoration(
                   labelText: 'Password',
                   hintText: 'Enter your password',
-                  prefixIcon: const Icon(Icons.lock_outline),
+                  prefixIcon: const Icon(Icons.lock_outline_rounded),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
+                      color: AppTheme.warmGray,
                     ),
                     onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
+                      setState(() => _obscurePassword = !_obscurePassword);
                     },
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  fillColor: AppTheme.surfaceColor,
+                  fillColor: AppTheme.ivory,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -201,8 +249,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => _onLogin(),
               ),
             ],
           ),
@@ -215,28 +261,19 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         final isLoading = state is AuthLoading;
-        
+
         return SizedBox(
           width: double.infinity,
           height: 56,
           child: ElevatedButton(
             onPressed: isLoading ? null : _onLogin,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryColor,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 4,
-              shadowColor: AppTheme.primaryColor.withOpacity(0.3),
-            ),
             child: isLoading
                 ? const SizedBox(
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
                       color: Colors.white,
-                      strokeWidth: 2,
+                      strokeWidth: 2.5,
                     ),
                   )
                 : const Text(
@@ -244,11 +281,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
                     ),
                   ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildDivider() {
+    return Row(
+      children: [
+        const Expanded(child: Divider()),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            'OR',
+            style: GoogleFonts.notoSans(
+              color: AppTheme.warmGray,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+        const Expanded(child: Divider()),
+      ],
     );
   }
 
@@ -258,25 +317,20 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Text(
           "Don't have an account? ",
-          style: AppTheme.bodyMedium.copyWith(
-            color: AppTheme.textSecondary,
+          style: GoogleFonts.notoSans(
+            color: AppTheme.warmGray,
+            fontSize: 14,
           ),
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => BlocProvider.value(
-                  value: context.read<AuthBloc>(),
-                  child: const RegisterScreen(),
-                ),
-              ),
-            );
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed('/register');
           },
           child: Text(
             'Sign Up',
-            style: AppTheme.bodyMedium.copyWith(
-              color: AppTheme.primaryColor,
+            style: GoogleFonts.notoSerif(
+              color: AppTheme.terracotta,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),

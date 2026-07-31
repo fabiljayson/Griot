@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/network/api_client.dart';
@@ -13,16 +12,19 @@ import 'features/authentication/presentation/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize dependencies
-  final prefs = await SharedPreferences.getInstance();
-  final apiClient = ApiClient();
-  
+
+  // Initialize secure storage
+  const secureStorage = FlutterSecureStorage();
+
+  // Initialize API client with secure storage
+  final apiClient = ApiClient(secureStorage: secureStorage);
+
+  // Initialize auth repository
   final authRepository = AuthRepository(
     dio: apiClient.dio,
-    prefs: prefs,
+    secureStorage: secureStorage,
   );
-  
+
   runApp(MyApp(authRepository: authRepository));
 }
 
@@ -37,27 +39,52 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider.value(value: authRepository),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => AuthBloc(
-              authRepository: authRepository,
-            )..add(AuthCheckRequested()),
-          ),
-        ],
+      child: BlocProvider(
+        create: (context) => AuthBloc(
+          authRepository: authRepository,
+        )..add(AuthCheckRequested()),
         child: MaterialApp(
           title: 'African Teller',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          initialRoute: '/login',
+          home: const AuthGate(),
           routes: {
             '/login': (context) => const LoginScreen(),
-            '/register': (context) => BlocProvider.value(
-                  value: context.read<AuthBloc>(),
-                  child: const RegisterScreen(),
-                ),
+            '/register': (context) => const RegisterScreen(),
             '/home': (context) => const HomeScreen(),
           },
+        ),
+      ),
+    );
+  }
+}
+
+/// Redirects to Home or Login based on authentication state.
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthAuthenticated) {
+          Navigator.of(context).pushReplacementNamed('/home');
+        } else if (state is AuthUnauthenticated) {
+          Navigator.of(context).pushReplacementNamed('/login');
+        } else if (state is AuthRegistrationSuccess) {
+          Navigator.of(context).pushReplacementNamed('/login');
+        }
+      },
+      child: const Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Loading African Teller...'),
+            ],
+          ),
         ),
       ),
     );
