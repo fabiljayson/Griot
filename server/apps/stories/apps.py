@@ -5,3 +5,6 @@ class StoriesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'apps.stories'
     verbose_name = 'Stories'
+    
+    def ready(self):
+        import apps.stories.signals  # noqa: F401

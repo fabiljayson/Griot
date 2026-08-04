@@ -102,6 +102,12 @@ class Story(models.Model):
         blank=True,
         null=True,
     )
+    blurhash = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text='BlurHash placeholder for progressive image loading',
+    )
     audio_file = models.FileField(
         upload_to='stories/audio/',
         blank=True,
@@ -248,3 +254,54 @@ class AIContent(models.Model):
 
     def __str__(self):
         return f"{self.get_content_type_display()} for {self.story.title}"
+
+
+class StoryFeedback(models.Model):
+    """User feedback/flags for cultural inaccuracy or content issues."""
+
+    class Reason(models.TextChoices):
+        CULTURAL_INACCURACY = 'CULTURAL_INACCURACY', 'Cultural Inaccuracy'
+        INAPPROPRIATE_CONTENT = 'INAPPROPRIATE_CONTENT', 'Inappropriate Content'
+        FACTUAL_ERROR = 'FACTUAL_ERROR', 'Factual Error'
+        OFFENSIVE_LANGUAGE = 'OFFENSIVE_LANGUAGE', 'Offensive Language'
+        COPYRIGHT_ISSUE = 'COPYRIGHT_ISSUE', 'Copyright Issue'
+        OTHER = 'OTHER', 'Other'
+
+    story = models.ForeignKey(
+        Story,
+        on_delete=models.CASCADE,
+        related_name='feedback',
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='story_feedback',
+    )
+    reason = models.CharField(
+        max_length=30,
+        choices=Reason.choices,
+    )
+    comments = models.TextField(
+        blank=True,
+        help_text='Additional details about the feedback',
+    )
+    is_resolved = models.BooleanField(default=False)
+    resolved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='resolved_feedback',
+    )
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Story Feedback'
+        verbose_name_plural = 'Story Feedback'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Feedback on {self.story.title}: {self.get_reason_display()}"

@@ -85,3 +85,35 @@ class UserDetailView(generics.RetrieveDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+
+class AccountDeletionView(APIView):
+    """
+    Delete user account with data anonymization.
+    DELETE /api/users/me/
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def delete(self, request):
+        user = request.user
+        
+        # Anonymize user data instead of hard delete
+        user.username = f'deleted_user_{user.id}'
+        user.email = ''
+        user.first_name = ''
+        user.last_name = ''
+        user.set_unusable_password()
+        user.is_active = False
+        user.save()
+        
+        # Clear any sensitive data
+        from rest_framework_simplejwt.tokens import RefreshToken
+        try:
+            RefreshToken.for_user(user).blacklist()
+        except Exception:
+            pass
+        
+        return Response(
+            {'message': 'Account deleted successfully.'},
+            status=status.HTTP_200_OK
+        )

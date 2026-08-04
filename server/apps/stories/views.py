@@ -1,19 +1,22 @@
+import unicodedata
+import re
 from django.db import models
+from django.db.models import Q
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 
-from .models import Category, Story, MediaAsset, AIContent
+from .models import Category, Story, MediaAsset, AIContent, StoryFeedback
 from .serializers import (
     CategorySerializer,
     StoryListSerializer,
     StoryDetailSerializer,
     MediaAssetSerializer,
     AIContentSerializer,
+    StoryFeedbackSerializer,
 )
 from apps.users.permissions import IsContributorOrAbove, IsManagerOrAbove
 
@@ -63,6 +66,11 @@ class StoryViewSet(viewsets.ModelViewSet):
     CRUD for stories.
     List / Retrieve: any user (published stories public, drafts visible to author).
     Create / Update / Delete: contributors and above.
+
+    Custom actions:
+        POST /stories/{slug}/generate-video/ - Trigger Luma AI video generation
+        GET  /stories/{slug}/video-status/  - Check video generation status
+        POST /stories/{slug}/reset-video/   - Reset video generation state
     """
     filter_backends = [
         DjangoFilterBackend,
@@ -94,7 +102,7 @@ class StoryViewSet(viewsets.ModelViewSet):
         return StoryDetailSerializer
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'video_status']:
             return [permissions.AllowAny()]
         return [IsContributorOrAbove(), IsAuthorOrReadOnly()]
 
@@ -134,6 +142,11 @@ class StoryViewSet(viewsets.ModelViewSet):
         """Trigger AI video generation for a story using Luma AI.
 
         POST /api/stories/stories/{slug}/generate-video/
+
+        Builds a cinematic prompt from story.title + story.summary,
+        calls LumaVideoService.trigger_generation(), sets
+        story.video_generation_id and story.video_status = 'processing'.
+        Returns 202 Accepted with generation_id and initial status.
         """
         story = self.get_object()
 
@@ -156,7 +169,7 @@ class StoryViewSet(viewsets.ModelViewSet):
             from .services.luma_service import get_luma_service
             luma_service = get_luma_service()
 
-            # Build prompt from story content
+            # Build cinematic prompt from story content
             prompt_text = self._build_video_prompt(story)
 
             # Trigger generation
@@ -192,6 +205,11 @@ class StoryViewSet(viewsets.ModelViewSet):
         """Check the status of a video generation job.
 
         GET /api/stories/stories/{slug}/video-status/
+
+        Calls LumaVideoService.check_status(story.video_generation_id).
+        If state is 'completed', updates story.video_url and video_status.
+        If state is 'failed', sets story.video_status = 'failed'.
+        Returns updated story video state and URL.
         """
         story = self.get_object()
 
@@ -209,16 +227,14 @@ class StoryViewSet(viewsets.ModelViewSet):
                 generation = luma_service.check_status(story.video_generation_id)
 
                 # Update status based on Luma AI response
-                if hasattr(generation, 'state'):
-                    state = generation.state.lower()
-                    if state == 'completed':
-                        story.video_status = 'completed'
-                        if generation.assets and generation.assets.video:
-                            story.video_url = generation.assets.video
-                        story.save(update_fields=['video_status', 'video_url'])
-                    elif state == 'failed':
-                        story.video_status = 'failed'
-                        story.save(update_fields=['video_status'])
+                if generation.state == 'completed':
+                    story.video_status = 'completed'
+                    if generation.assets and generation.assets.video:
+                        story.video_url = generation.assets.video
+                    story.save(update_fields=['video_status', 'video_url'])
+                elif generation.state == 'failed':
+                    story.video_status = 'failed'
+                    story.save(update_fields=['video_status'])
 
             except Exception as e:
                 import logging
@@ -238,6 +254,12 @@ class StoryViewSet(viewsets.ModelViewSet):
         POST /api/stories/stories/{slug}/reset-video/
         """
         story = self.get_object()
+
+        if story.video_status == 'idle':
+            return Response({
+                'message': 'Video generation is already idle.',
+                'status': 'idle',
+            })
 
         # Check if user is the author or has manager/admin role
         if story.author and story.author != request.user:
@@ -269,6 +291,87 @@ class StoryViewSet(viewsets.ModelViewSet):
             prompt_parts.append(f"{story.culture} cultural heritage,")
         prompt_parts.append('vibrant colors, traditional African architecture, cinematic lighting, 4K quality.')
         return ' '.join(prompt_parts)
+
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def flag(self, request, slug=None):
+        """Flag a story for cultural inaccuracy or content issues.
+
+        POST /api/stories/stories/{slug}/flag/
+        """
+        story = self.get_object()
+        serializer = StoryFeedbackSerializer(data=request.data, context={'request': request})
+        
+        if serializer.is_valid():
+            serializer.save(story=story)
+            return Response(
+                {'message': 'Thank you for your feedback. We will review it shortly.'},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def strip_accents(text):
+    """Remove accents from text for fuzzy matching."""
+    try:
+        text = unicodedata.normalize('NFD', text)
+        text = ''.join(c for c in text if unicodedata.category(c) != 'Mn')
+    except Exception:
+        pass
+    return text
+
+
+class StorySearchView(APIView):
+    """
+    Fuzzy search endpoint for stories.
+    GET /api/stories/search/?q=...
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        query = request.query_params.get('q', '').strip()
+        if not query:
+            return Response(
+                {'error': 'Search query is required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Strip accents for fuzzy matching
+        normalized_query = strip_accents(query.lower())
+        
+        # Search across multiple fields
+        stories = Story.objects.filter(
+            status=Story.Status.PUBLISHED
+        ).filter(
+            Q(title__icontains=query) |
+            Q(subtitle__icontains=query) |
+            Q(summary__icontains=query) |
+            Q(content__icontains=query) |
+            Q(culture__icontains=query) |
+            Q(country__icontains=query) |
+            Q(region__icontains=query) |
+            Q(title__icontains=normalized_query) |
+            Q(culture__icontains=normalized_query)
+        ).select_related('author').prefetch_related('categories')
+        
+        # Apply pagination
+        page = self.paginate_results(stories, request)
+        
+        return Response({
+            'count': stories.count(),
+            'query': query,
+            'results': StoryListSerializer(page, many=True, context={'request': request}).data,
+        })
+    
+    def paginate_results(self, queryset, request):
+        """Simple pagination for search results."""
+        try:
+            limit = int(request.query_params.get('limit', 20))
+            offset = int(request.query_params.get('offset', 0))
+        except (ValueError, TypeError):
+            limit = 20
+            offset = 0
+        
+        return queryset[offset:offset + limit]
 
 
 class MediaAssetViewSet(viewsets.ModelViewSet):
@@ -314,163 +417,3 @@ class AIContentViewSet(viewsets.ModelViewSet):
         if self.action in ['list', 'retrieve']:
             return [permissions.AllowAny()]
         return [IsContributorOrAbove()]
-
-
-# ─── Luma AI Video Generation Views ───
-
-
-class VideoGenerationView(APIView):
-    """
-    Trigger AI video generation for a story using Luma AI.
-
-    POST /api/stories/stories/{id}/generate-video/
-    """
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request, pk):
-        story = get_object_or_404(Story, pk=pk)
-
-        # Check if video is already being generated
-        if story.video_status == 'processing':
-            return Response(
-                {'error': 'Video generation is already in progress.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Check if user is the author or has manager/admin role
-        if story.author and story.author != request.user:
-            if not hasattr(request.user, 'role') or request.user.role not in ['MANAGER', 'ADMIN']:
-                return Response(
-                    {'error': 'You do not have permission to generate video for this story.'},
-                    status=status.HTTP_403_FORBIDDEN
-                )
-
-        try:
-            from .services.luma_service import get_luma_service
-            luma_service = get_luma_service()
-
-            # Build prompt from story content
-            prompt_text = self._build_prompt(story)
-
-            # Trigger generation
-            generation_id = luma_service.trigger_generation(
-                prompt_text=prompt_text,
-                aspect_ratio=request.data.get('aspect_ratio', '16:9'),
-            )
-
-            # Update story with generation info
-            story.video_generation_id = generation_id
-            story.video_status = 'processing'
-            story.save(update_fields=['video_generation_id', 'video_status'])
-
-            return Response({
-                'message': 'Video generation started successfully.',
-                'generation_id': generation_id,
-                'status': 'processing',
-            }, status=status.HTTP_202_ACCEPTED)
-
-        except ImportError:
-            return Response(
-                {'error': 'Video generation service is not available. Please install lumaai package.'},
-                status=status.HTTP_503_SERVICE_UNAVAILABLE
-            )
-        except Exception as e:
-            return Response(
-                {'error': f'Failed to start video generation: {str(e)}'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-    def _build_prompt(self, story):
-        """Build a descriptive prompt for video generation from story content."""
-        prompt_parts = [
-            f"A cinematic visualization of the African cultural story: '{story.title}'.",
-            story.summary[:500] if story.summary else "",
-        ]
-
-        if story.culture:
-            prompt_parts.append(f"This story represents the {story.culture} cultural heritage of Africa.")
-
-        prompt_parts.append("Beautiful African landscapes, traditional architecture, vibrant colors, cultural richness, cinematic lighting.")
-
-        return " ".join(prompt_parts)
-
-
-class VideoStatusView(APIView):
-    """
-    Check the status of a video generation job.
-
-    GET /api/stories/stories/{id}/video-status/
-    """
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def get(self, request, pk):
-        story = get_object_or_404(Story, pk=pk)
-
-        if not story.video_generation_id:
-            return Response({
-                'status': 'idle',
-                'message': 'No video generation has been initiated for this story.',
-            })
-
-        # Check status if still processing
-        if story.video_status == 'processing':
-            try:
-                from .services.luma_service import get_luma_service
-                luma_service = get_luma_service()
-                generation = luma_service.check_status(story.video_generation_id)
-
-                # Update status based on Luma AI response
-                if hasattr(generation, 'state'):
-                    state = generation.state.lower()
-                    if state == 'completed':
-                        story.video_status = 'completed'
-                        # Get video URL
-                        if hasattr(generation, 'assets') and generation.assets:
-                            if hasattr(generation.assets, 'video') and generation.assets.video:
-                                story.video_url = generation.assets.video
-                        story.save(update_fields=['video_status', 'video_url'])
-                    elif state == 'failed':
-                        story.video_status = 'failed'
-                        story.save(update_fields=['video_status'])
-
-            except Exception as e:
-                import logging
-                logger = logging.getLogger(__name__)
-                logger.error(f"Failed to check video status: {e}")
-
-        return Response({
-            'status': story.video_status,
-            'generation_id': story.video_generation_id,
-            'video_url': story.video_url,
-        })
-
-
-class VideoResetView(APIView):
-    """
-    Reset video generation status for a story.
-
-    POST /api/stories/stories/{id}/reset-video/
-    """
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request, pk):
-        story = get_object_or_404(Story, pk=pk)
-
-        # Check if user is the author or has manager/admin role
-        if story.author and story.author != request.user:
-            if not hasattr(request.user, 'role') or request.user.role not in ['MANAGER', 'ADMIN']:
-                return Response(
-                    {'error': 'You do not have permission to reset video for this story.'},
-                    status=status.HTTP_403_FORBIDDEN
-                )
-
-        # Reset video fields
-        story.video_generation_id = None
-        story.video_status = 'idle'
-        story.video_url = None
-        story.save(update_fields=['video_generation_id', 'video_status', 'video_url'])
-
-        return Response({
-            'message': 'Video generation status has been reset.',
-            'status': 'idle',
-        })

@@ -34,6 +34,7 @@ class DatabaseHelper {
         audio_path TEXT,
         video_path TEXT,
         image_path TEXT,
+        blurhash TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -70,6 +71,15 @@ class DatabaseHelper {
         FOREIGN KEY (achievement_id) REFERENCES achievements (id)
       )
     ''');
+    
+    // Create recent searches table
+    await db.execute('''
+      CREATE TABLE recent_searches(
+        id INTEGER PRIMARY KEY,
+        query_text TEXT NOT NULL,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
   }
   
   // CRUD operations for stories
@@ -97,5 +107,42 @@ class DatabaseHelper {
   Future<int> deleteStory(int id) async {
     final db = await database;
     return await db.delete('stories', where: 'id = ?', whereArgs: [id]);
+  }
+  
+  // Recent searches operations
+  Future<void> addRecentSearch(String query) async {
+    final db = await database;
+    
+    // Check if query already exists, remove it if so
+    await db.delete('recent_searches', where: 'query_text = ?', whereArgs: [query]);
+    
+    // Insert new search
+    await db.insert('recent_searches', {
+      'query_text': query,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+    
+    // Keep only the 10 most recent searches
+    final count = await db.rawQuery('SELECT COUNT(*) as count FROM recent_searches');
+    final total = count.first['count'] as int;
+    if (total > 10) {
+      await db.rawDelete('''
+        DELETE FROM recent_searches 
+        WHERE id NOT IN (
+          SELECT id FROM recent_searches ORDER BY timestamp DESC LIMIT 10
+        )
+      ''');
+    }
+  }
+  
+  Future<List<String>> getRecentSearches() async {
+    final db = await database;
+    final results = await db.query('recent_searches', orderBy: 'timestamp DESC', limit: 10);
+    return results.map((r) => r['query_text'] as String).toList();
+  }
+  
+  Future<void> clearRecentSearches() async {
+    final db = await database;
+    await db.delete('recent_searches');
   }
 }

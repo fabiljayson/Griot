@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'retry_interceptor.dart';
 
 class ApiClient {
   static const String _baseUrl = 'http://localhost:8000/api';
@@ -50,6 +51,9 @@ class ApiClient {
         handler.next(error);
       },
     ));
+    
+    // Add retry interceptor
+    _dio.interceptors.add(RetryInterceptor(dio: _dio));
   }
 
   Future<bool> _refreshToken() async {

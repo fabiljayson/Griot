@@ -20,11 +20,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Web pages
+    path('', include('apps.web.urls', namespace='web')),
+    
+    # API endpoints
     path('api/users/', include('apps.users.urls', namespace='users')),
     path('api/stories/', include('apps.stories.urls', namespace='stories')),
     path('api/qr/', include('apps.qr_codes.urls', namespace='qr_codes')),
     path('api/gamification/', include('apps.gamification.urls', namespace='gamification')),
+    
+    # Django admin
+    path('django-admin/', admin.site.urls),
 ]
 
 # Serve media files in development

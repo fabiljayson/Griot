@@ -1,0 +1,640 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="{% block meta_description %}African Teller - Discover African Cultural Heritage through Stories{% endblock %}">
+    <meta name="theme-color" content="#C85A32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="African Teller">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="apple-touch-icon" href="/static/icons/icon.svg">
+    <link rel="icon" type="image/svg+xml" href="/static/icons/icon.svg">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        terracotta: { DEFAULT: '#C85A32', dark: '#A03C1B', light: '#E8845C' },
+                        ochre: { DEFAULT: '#D99B26', light: '#EAB852', dark: '#B8830F' },
+                        savannah: { DEFAULT: '#2D5A27', dark: '#1C3A19', light: '#4A8C3F' },
+                        parchment: { 50: '#FAF8F5', 100: '#F4EFE6', 200: '#E8DEC8', DEFAULT: '#F4EFE6' },
+                        charcoal: '#222222',
+                        warmgray: { DEFAULT: '#6B6358', light: '#8A8278' },
+                        ivory: '#FFFBF5',
+                    },
+                    fontFamily: {
+                        heading: ['Cinzel', 'Georgia', 'serif'],
+                        body: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'manuscript': '0 4px 20px rgba(200, 90, 50, 0.1)',
+                        'manuscript-lg': '0 8px 40px rgba(200, 90, 50, 0.15)',
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <style>
+        /* Mobile menu animations */
+        .mobile-menu-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu-panel {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            will-change: transform;
+        }
+        .mobile-menu-panel.active {
+            transform: translateX(0);
+        }
+        .mobile-menu-panel.swiping {
+            transition: none;
+        }
+        .hamburger-line {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .hamburger-active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger-active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger-active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        /* Touch-friendly tap targets */
+        @media (pointer: coarse) {
+            .touch-target {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+        /* Bottom Navigation */
+        .bottom-nav {
+            display: none;
+        }
+        @media (max-width: 767px) {
+            .bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                border-top: 1px solid rgba(107, 99, 88, 0.15);
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+                z-index: 45;
+                padding: 8px 0;
+                padding-bottom: max(8px, env(safe-area-inset-bottom));
+            }
+            body {
+                padding-bottom: 80px;
+            }
+            .mobile-footer {
+                display: none;
+            }
+        }
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 0;
+            min-width: 64px;
+            color: #6B6358;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+        .bottom-nav-item:hover,
+        .bottom-nav-item.active {
+            color: #C85A32;
+        }
+        .bottom-nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: #C85A32;
+            border-radius: 0 0 4px 4px;
+        }
+        .bottom-nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+        .bottom-nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+    
+    <title>{% block title %}African Teller - Cultural Heritage Stories{% endblock %}</title>
+</head>
+<body class="bg-parchment text-charcoal font-body min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-terracotta text-white sticky top-0 z-50 shadow-manuscript">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="{% url 'web:home' %}" class="flex items-center space-x-3 touch-target">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <span class="font-heading font-bold text-xl hidden sm:block">African Teller</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'web:home' %}" class="font-body text-sm font-medium hover:text-ochre-light transition-colors touch-target flex items-center">Home</a>
+                    <a href="{% url 'web:stories' %}" class="font-body text-sm font-medium hover:text-ochre-light transition-colors touch-target flex items-center">Stories</a>
+                    <a href="{% url 'web:about' %}" class="font-body text-sm font-medium hover:text-ochre-light transition-colors touch-target flex items-center">About</a>
+                </nav>
+                
+                <!-- Desktop Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'web:profile' %}" class="text-sm font-medium hover:text-ochre-light transition-colors touch-target flex items-center">
+                            {{ user.username }}
+                        </a>
+                        <a href="{% url 'web:logout' %}" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors touch-target">
+                            Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'web:login' %}" class="text-sm font-medium hover:text-ochre-light transition-colors touch-target flex items-center">Login</a>
+                        <a href="{% url 'web:register' %}" class="bg-white text-terracotta px-4 py-2 rounded-lg text-sm font-bold hover:bg-ochre-light transition-colors touch-target">
+                            Sign Up
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/20 transition-colors touch-target" aria-label="Open menu" aria-expanded="false">
+                    <div class="w-6 h-6 flex flex-col justify-center items-center">
+                        <span class="hamburger-line block w-5 h-0.5 bg-white mb-1"></span>
+                        <span class="hamburger-line block w-5 h-0.5 bg-white mb-1"></span>
+                        <span class="hamburger-line block w-5 h-0.5 bg-white"></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay fixed inset-0 bg-black/50 z-40 md:hidden"></div>
+    
+    <!-- Mobile Menu Panel -->
+    <div id="mobile-menu-panel" class="mobile-menu-panel fixed top-0 right-0 w-80 max-w-[85vw] h-full bg-white z-50 md:hidden shadow-2xl overflow-y-auto">
+        <!-- Mobile Menu Header -->
+        <div class="bg-terracotta p-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <span class="font-heading font-bold text-lg">African Teller</span>
+                </div>
+                <button id="mobile-menu-close" class="p-2 rounded-lg hover:bg-white/20 transition-colors" aria-label="Close menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            {% if user.is_authenticated %}
+            <div class="mt-4 pt-4 border-t border-white/20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <span class="font-heading font-bold text-lg">{{ user.first_name.0 }}{{ user.last_name.0 }}</span>
+                    </div>
+                    <div>
+                        <p class="font-medium">{{ user.get_full_name|default:user.username }}</p>
+                        <p class="text-sm text-white/70">{{ user.email }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Mobile Menu Navigation -->
+        <nav class="p-4">
+            <ul class="space-y-2">
+                <li>
+                    <a href="{% url 'web:home' %}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-parchment transition-colors touch-target">
+                        <svg class="w-5 h-5 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span class="font-medium text-charcoal">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'web:stories' %}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-parchment transition-colors touch-target">
+                        <svg class="w-5 h-5 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        <span class="font-medium text-charcoal">Stories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'web:about' %}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-parchment transition-colors touch-target">
+                        <svg class="w-5 h-5 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span class="font-medium text-charcoal">About</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Mobile Auth Section -->
+            <div class="mt-6 pt-6 border-t border-warmgray/20">
+                {% if user.is_authenticated %}
+                <ul class="space-y-2">
+                    <li>
+                        <a href="{% url 'web:profile' %}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-parchment transition-colors touch-target">
+                            <svg class="w-5 h-5 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            <span class="font-medium text-charcoal">Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'web:logout' %}" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 transition-colors touch-target">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            <span class="font-medium">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+                {% else %}
+                <div class="space-y-3">
+                    <a href="{% url 'web:login' %}" class="block w-full text-center px-4 py-3 bg-terracotta text-white rounded-xl font-heading font-bold hover:bg-terracotta-dark transition-colors touch-target">
+                        Sign In
+                    </a>
+                    <a href="{% url 'web:register' %}" class="block w-full text-center px-4 py-3 border-2 border-terracotta text-terracotta rounded-xl font-heading font-bold hover:bg-terracotta hover:text-white transition-colors touch-target">
+                        Create Account
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+        
+        <!-- Mobile Menu Footer -->
+        <div class="p-4 mt-auto border-t border-warmgray/20">
+            <p class="text-xs text-warmgray text-center">
+                © 2026 African Teller
+            </p>
+        </div>
+    </div>
+    
+    <!-- Messages -->
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        {% for message in messages %}
+        <div class="mb-4 p-4 rounded-xl {% if message.tags == 'success' %}bg-savannah/10 text-savannah border border-savannah/20{% elif message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-ochre/10 text-ochre-dark border border-ochre/20{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Main Content -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Bottom Navigation (Mobile Only) -->
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+        <a href="{% url 'web:home' %}" class="bottom-nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            <svg class="bottom-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span class="bottom-nav-label">Home</span>
+        </a>
+        <a href="{% url 'web:stories' %}" class="bottom-nav-item {% if request.resolver_match.url_name == 'stories' or request.resolver_match.url_name == 'story_detail' %}active{% endif %}">
+            <svg class="bottom-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+            <span class="bottom-nav-label">Stories</span>
+        </a>
+        <a href="{% url 'web:about' %}" class="bottom-nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+            <svg class="bottom-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="bottom-nav-label">About</span>
+        </a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'web:profile' %}" class="bottom-nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            <svg class="bottom-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            <span class="bottom-nav-label">Profile</span>
+        </a>
+        {% else %}
+        <a href="{% url 'web:login' %}" class="bottom-nav-item {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}active{% endif %}">
+            <svg class="bottom-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+            </svg>
+            <span class="bottom-nav-label">Sign In</span>
+        </a>
+        {% endif %}
+    </nav>
+    
+    <!-- Footer (Hidden on mobile when bottom nav is visible) -->
+    <footer class="bg-charcoal text-white mt-auto mobile-footer">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="col-span-1 sm:col-span-2 md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-terracotta rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                        <span class="font-heading font-bold text-xl">African Teller</span>
+                    </div>
+                    <p class="text-warmgray-light text-sm leading-relaxed max-w-md">
+                        Preserving and sharing Africa's rich cultural heritage through interactive stories, 
+                        AI-powered video narratives, and gamified learning experiences.
+                    </p>
+                    <!-- Social Links -->
+                    <div class="flex items-center space-x-4 mt-6">
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-terracotta transition-colors" aria-label="Twitter">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-terracotta transition-colors" aria-label="Instagram">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-terracotta transition-colors" aria-label="Facebook">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Links -->
+                <div>
+                    <h4 class="font-heading font-semibold text-lg mb-4">Explore</h4>
+                    <ul class="space-y-3">
+                        <li><a href="{% url 'web:stories' %}" class="text-warmgray-light hover:text-terracotta transition-colors text-sm touch-target inline-flex items-center">Stories</a></li>
+                        <li><a href="{% url 'web:about' %}" class="text-warmgray-light hover:text-terracotta transition-colors text-sm touch-target inline-flex items-center">About</a></li>
+                        <li><a href="#" class="text-warmgray-light hover:text-terracotta transition-colors text-sm touch-target inline-flex items-center">FAQ</a></li>
+                        <li><a href="#" class="text-warmgray-light hover:text-terracotta transition-colors text-sm touch-target inline-flex items-center">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Legal -->
+                <div>
+                    <h4 class="font-heading font-semibold text-lg mb-4">Legal</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-warmgray-light hover:text-terracotta transition-colors text-sm touch-target inline-flex items-center">Privacy Policy</a></li>
+                        <li><a href="#" class="text-warmgray-light hover:text-terracotta transition-colors text-sm touch-target inline-flex items-center">Terms of Service</a></li>
+                        <li><a href="#" class="text-warmgray-light hover:text-terracotta transition-colors text-sm touch-target inline-flex items-center">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-warmgray text-sm text-center sm:text-left">
+                    &copy; {% now "Y" %} African Teller. All rights reserved.
+                </p>
+                <p class="text-warmgray text-sm">
+                    <span class="text-terracotta">Built with ❤️ for African Heritage</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Mobile Menu Script with Swipe Gestures -->
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        
+        // Swipe gesture state
+        let touchStartX = 0;
+        let touchCurrentX = 0;
+        let isSwiping = false;
+        const SWIPE_THRESHOLD = 80; // Minimum distance to trigger close
+        const MAX_DRAG = 320; // Maximum panel width for dragging
+        
+        function openMobileMenu() {
+            mobileMenuPanel.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('hamburger-active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            mobileMenuPanel.classList.remove('active');
+            mobileMenuPanel.classList.remove('swiping');
+            mobileMenuPanel.style.transform = '';
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('hamburger-active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+        
+        function updateMenuPosition(x) {
+            const panelWidth = mobileMenuPanel.offsetWidth;
+            const translateX = Math.max(0, Math.min(panelWidth, panelWidth - x));
+            const opacity = 1 - (translateX / panelWidth) * 0.5;
+            
+            mobileMenuPanel.style.transform = `translateX(${translateX}px)`;
+            mobileMenuOverlay.style.opacity = opacity;
+        }
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                if (mobileMenuPanel.classList.contains('active')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
+        }
+        
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        }
+        
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        }
+        
+        // Touch event handlers for swipe gestures
+        if (mobileMenuPanel) {
+            mobileMenuPanel.addEventListener('touchstart', (e) => {
+                if (!mobileMenuPanel.classList.contains('active')) return;
+                
+                touchStartX = e.touches[0].clientX;
+                touchCurrentX = touchStartX;
+                isSwiping = false;
+                
+                // Add swiping class to disable transition
+                mobileMenuPanel.classList.add('swiping');
+            }, { passive: true });
+            
+            mobileMenuPanel.addEventListener('touchmove', (e) => {
+                if (!mobileMenuPanel.classList.contains('active')) return;
+                
+                touchCurrentX = e.touches[0].clientX;
+                const deltaX = touchCurrentX - touchStartX;
+                
+                // Only allow swiping right (positive deltaX)
+                if (deltaX > 10) {
+                    isSwiping = true;
+                    updateMenuPosition(deltaX);
+                }
+            }, { passive: true });
+            
+            mobileMenuPanel.addEventListener('touchend', (e) => {
+                if (!isSwiping) return;
+                
+                const deltaX = touchCurrentX - touchStartX;
+                
+                // Remove swiping class to re-enable transition
+                mobileMenuPanel.classList.remove('swiping');
+                
+                // If swiped far enough, close the menu
+                if (deltaX > SWIPE_THRESHOLD) {
+                    closeMobileMenu();
+                } else {
+                    // Snap back to open position
+                    mobileMenuPanel.style.transform = '';
+                    mobileMenuOverlay.style.opacity = '';
+                }
+                
+                isSwiping = false;
+            });
+        }
+        
+        // Also allow swiping from the edge of the screen to open
+        document.addEventListener('touchstart', (e) => {
+            if (mobileMenuPanel.classList.contains('active')) return;
+            
+            const touchX = e.touches[0].clientX;
+            const screenWidth = window.innerWidth;
+            
+            // Start tracking if touch is within 20px of right edge
+            if (touchX > screenWidth - 20) {
+                touchStartX = touchX;
+                isSwiping = true;
+            }
+        }, { passive: true });
+        
+        document.addEventListener('touchend', (e) => {
+            if (!isSwiping || mobileMenuPanel.classList.contains('active')) return;
+            
+            const touchEndX = e.changedTouches[0].clientX;
+            const deltaX = touchStartX - touchEndX; // Negative because we're swiping left
+            
+            // If swiped left from right edge, open menu
+            if (deltaX > SWIPE_THRESHOLD) {
+                openMobileMenu();
+            }
+            
+            isSwiping = false;
+        });
+        
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenuPanel.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+        
+        // Close menu on resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                closeMobileMenu();
+            }
+        });
+    </script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('{% static "js/sw.js" %}')
+                    .then((registration) => {
+                        console.log('SW registered:', registration.scope);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+                                    // Show update available notification
+                                    if (confirm('A new version is available! Reload to update?')) {
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('SW registration failed:', error);
+                    });
+            });
+        }
+    </script>
+    
+    <!-- PWA Install Prompt -->
+    <script>
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install button (optional)
+            console.log('PWA install prompt available');
+        });
+        
+        window.addEventListener('appinstalled', () => {
+            deferredPrompt = null;
+            console.log('PWA installed');
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

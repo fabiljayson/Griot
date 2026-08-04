@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}African Teller - Discover African Cultural Heritage{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-terracotta via-terracotta-dark to-charcoal"></div>
+    <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+        <div class="text-center">
+            <h1 class="font-heading text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                Discover Africa's<br>
+                <span class="text-ochre-light">Cultural Heritage</span>
+            </h1>
+            <p class="font-body text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Immerse yourself in the rich tapestry of African traditions, kingdoms, and folklore 
+                through AI-powered stories and cinematic video narratives.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'web:stories' %}" class="bg-white text-terracotta px-8 py-4 rounded-xl font-heading font-bold text-lg hover:bg-ochre-light transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                    Explore Stories
+                </a>
+                <a href="{% url 'web:register' %}" class="border-2 border-white text-white px-8 py-4 rounded-xl font-heading font-bold text-lg hover:bg-white hover:text-terracotta transition-all duration-200">
+                    Join Free
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Decorative Wave -->
+    <div class="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,80C1248,75,1344,53,1392,42.7L1440,32V120H0V64Z" fill="#F4EFE6"/>
+        </svg>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 bg-parchment">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="font-heading text-3xl md:text-4xl font-bold text-charcoal mb-4">
+                Why <span class="text-terracotta">African Teller</span>?
+            </h2>
+            <p class="font-body text-warmgray text-lg max-w-2xl mx-auto">
+                Experience African heritage like never before with our unique blend of 
+                tradition and technology.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-ivory rounded-2xl shadow-manuscript p-8 text-center hover:shadow-manuscript-lg hover:-translate-y-1 transition-all duration-300">
+                <div class="w-16 h-16 bg-terracotta/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-8 h-8 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                </div>
+                <h3 class="font-heading text-xl font-bold text-charcoal mb-3">Rich Stories</h3>
+                <p class="font-body text-warmgray leading-relaxed">
+                    Explore thousands of cultural stories from kingdoms, forests, and sacred lands across Africa.
+                </p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="bg-ivory rounded-2xl shadow-manuscript p-8 text-center hover:shadow-manuscript-lg hover:-translate-y-1 transition-all duration-300">
+                <div class="w-16 h-16 bg-ochre/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-8 h-8 text-ochre" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h3 class="font-heading text-xl font-bold text-charcoal mb-3">AI Video Narratives</h3>
+                <p class="font-body text-warmgray leading-relaxed">
+                    Watch stories come alive with cinematic AI-generated video visualizations.
+                </p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="bg-ivory rounded-2xl shadow-manuscript p-8 text-center hover:shadow-manuscript-lg hover:-translate-y-1 transition-all duration-300">
+                <div class="w-16 h-16 bg-savannah/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-8 h-8 text-savannah" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <h3 class="font-heading text-xl font-bold text-charcoal mb-3">Gamified Learning</h3>
+                <p class="font-body text-warmgray leading-relaxed">
+                    Earn points, badges, and climb leaderboards as you explore cultural heritage.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Stories Section -->
+<section class="py-20 bg-parchment-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-12">
+            <div>
+                <h2 class="font-heading text-3xl md:text-4xl font-bold text-charcoal mb-2">
+                    Featured <span class="text-terracotta">Stories</span>
+                </h2>
+                <p class="font-body text-warmgray">Discover our most beloved cultural tales</p>
+            </div>
+            <a href="{% url 'web:stories' %}" class="hidden sm:inline-flex items-center text-terracotta font-heading font-semibold hover:text-terracotta-dark transition-colors">
+                View All
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for story in featured_stories %}
+            <a href="{% url 'web:story_detail' story.slug %}" class="group bg-ivory rounded-2xl shadow-manuscript overflow-hidden hover:shadow-manuscript-lg hover:-translate-y-1 transition-all duration-300">
+                {% if story.cover_image %}
+                <div class="h-48 overflow-hidden">
+                    <img src="{{ story.cover_image.url }}" alt="{{ story.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                </div>
+                {% else %}
+                <div class="h-48 bg-gradient-to-br from-terracotta to-ochre flex items-center justify-center">
+                    <svg class="w-16 h-16 text-white/50" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                </div>
+                {% endif %}
+                
+                <div class="p-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        {% for category in story.categories.all|slice:":2" %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-terracotta/10 text-terracotta">
+                            {{ category.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    <h3 class="font-heading text-xl font-bold text-charcoal mb-2 group-hover:text-terracotta transition-colors">
+                        {{ story.title }}
+                    </h3>
+                    <p class="font-body text-warmgray text-sm leading-relaxed line-clamp-2">
+                        {{ story.summary }}
+                    </p>
+                    <div class="flex items-center mt-4 text-sm text-warmgray">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        {{ story.view_count }} views
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <!-- Placeholder stories when none exist -->
+            {% for placeholder in "123"|make_list %}
+            <div class="bg-ivory rounded-2xl shadow-manuscript overflow-hidden">
+                <div class="h-48 bg-gradient-to-br from-terracotta/20 to-ochre/20 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-terracotta/30" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                </div>
+                <div class="p-6">
+                    <div class="h-4 bg-terracotta/10 rounded w-1/3 mb-3"></div>
+                    <div class="h-6 bg-charcoal/5 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-charcoal/5 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-charcoal/5 rounded w-2/3"></div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12 sm:hidden">
+            <a href="{% url 'web:stories' %}" class="inline-flex items-center text-terracotta font-heading font-semibold hover:text-terracotta-dark transition-colors">
+                View All Stories
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-br from-charcoal to-terracotta-dark">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="font-heading text-3xl md:text-4xl font-bold text-white mb-6">
+            Ready to Explore African Heritage?
+        </h2>
+        <p class="font-body text-white/80 text-lg mb-10 max-w-2xl mx-auto">
+            Join thousands of culture enthusiasts discovering the rich tapestry of African traditions 
+            through interactive stories and AI-powered experiences.
+        </p>
+        <a href="{% url 'web:register' %}" class="inline-block bg-white text-terracotta px-10 py-4 rounded-xl font-heading font-bold text-lg hover:bg-ochre-light transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-1">
+            Get Started Free
+        </a>
+    </div>
+</section>
+{% endblock %}

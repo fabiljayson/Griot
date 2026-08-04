@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account - African Teller{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-5xl w-full flex flex-col lg:flex-row rounded-3xl overflow-hidden shadow-manuscript-lg">
+        
+        <!-- Left Side: African Proverb Card -->
+        <div class="lg:w-1/2 bg-gradient-to-br from-savannah via-savannah-dark to-charcoal p-8 lg:p-12 flex flex-col justify-center relative overflow-hidden">
+            <!-- Decorative Pattern -->
+            <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+            
+            <div class="relative z-10">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 mb-8">
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <span class="font-heading font-bold text-2xl text-white">African Teller</span>
+                </div>
+                
+                <!-- African Proverb -->
+                <blockquote class="mb-8">
+                    <div class="relative">
+                        <svg class="absolute -top-4 -left-2 w-12 h-12 text-white/20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                        </svg>
+                        <p class="font-heading text-2xl lg:text-3xl text-white leading-relaxed italic pl-8">
+                            "If you want to go fast, go alone. If you want to go far, go together."
+                        </p>
+                    </div>
+                    <footer class="mt-4 pl-8">
+                        <p class="text-white/70 font-body">— African Proverb</p>
+                    </footer>
+                </blockquote>
+                
+                <!-- Decorative Divider -->
+                <div class="flex items-center space-x-4 mb-8">
+                    <div class="flex-1 h-px bg-white/30"></div>
+                    <svg class="w-6 h-6 text-ochre-light" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <div class="flex-1 h-px bg-white/30"></div>
+                </div>
+                
+                <p class="font-body text-white/80 text-sm leading-relaxed">
+                    Join our community of culture enthusiasts and discover the rich tapestry 
+                    of African traditions. Create an account to start your journey.
+                </p>
+                
+                <!-- Benefits -->
+                <div class="mt-8 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <span class="text-white/90 text-sm">Access thousands of cultural stories</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <span class="text-white/90 text-sm">Earn badges and climb leaderboards</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <span class="text-white/90 text-sm">Watch AI-powered video narratives</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side: Registration Form -->
+        <div class="lg:w-1/2 bg-ivory p-8 lg:p-12 flex flex-col justify-center">
+            <div class="max-w-md w-full mx-auto">
+                <h2 class="font-heading text-3xl font-bold text-charcoal mb-2">
+                    Create Account
+                </h2>
+                <p class="font-body text-warmgray mb-8">
+                    Start your journey through African heritage
+                </p>
+                
+                {% if messages %}
+                {% for message in messages %}
+                <div class="mb-6 p-4 rounded-xl {% if message.tags == 'success' %}bg-savannah/10 text-savannah border border-savannah/20{% elif message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-ochre/10 text-ochre-dark border border-ochre/20{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                
+                <form method="post" class="space-y-5">
+                    {% csrf_token %}
+                    
+                    <!-- Username Field -->
+                    <div>
+                        <label for="id_username" class="block text-sm font-medium text-charcoal mb-2">
+                            Username
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-warmgray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                            </div>
+                            <input type="text" 
+                                   id="id_username" 
+                                   name="username" 
+                                   required
+                                   class="input-field pl-10" 
+                                   placeholder="Choose a username"
+                                   autofocus>
+                        </div>
+                    </div>
+                    
+                    <!-- Email Field -->
+                    <div>
+                        <label for="id_email" class="block text-sm font-medium text-charcoal mb-2">
+                            Email Address
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-warmgray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <input type="email" 
+                                   id="id_email" 
+                                   name="email" 
+                                   required
+                                   class="input-field pl-10" 
+                                   placeholder="Enter your email">
+                        </div>
+                    </div>
+                    
+                    <!-- Name Fields -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="id_first_name" class="block text-sm font-medium text-charcoal mb-2">
+                                First Name
+                            </label>
+                            <input type="text" 
+                                   id="id_first_name" 
+                                   name="first_name" 
+                                   required
+                                   class="input-field" 
+                                   placeholder="First name">
+                        </div>
+                        <div>
+                            <label for="id_last_name" class="block text-sm font-medium text-charcoal mb-2">
+                                Last Name
+                            </label>
+                            <input type="text" 
+                                   id="id_last_name" 
+                                   name="last_name" 
+                                   required
+                                   class="input-field" 
+                                   placeholder="Last name">
+                        </div>
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div>
+                        <label for="id_password1" class="block text-sm font-medium text-charcoal mb-2">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-warmgray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                            </div>
+                            <input type="password" 
+                                   id="id_password1" 
+                                   name="password1" 
+                                   required
+                                   class="input-field pl-10" 
+                                   placeholder="Create a password">
+                        </div>
+                        <p class="mt-1 text-xs text-warmgray">Must be at least 8 characters</p>
+                    </div>
+                    
+                    <!-- Confirm Password Field -->
+                    <div>
+                        <label for="id_password2" class="block text-sm font-medium text-charcoal mb-2">
+                            Confirm Password
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-warmgray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </div>
+                            <input type="password" 
+                                   id="id_password2" 
+                                   name="password2" 
+                                   required
+                                   class="input-field pl-10" 
+                                   placeholder="Confirm your password">
+                        </div>
+                    </div>
+                    
+                    <!-- Terms -->
+                    <div class="flex items-start">
+                        <input type="checkbox" 
+                               id="terms" 
+                               required
+                               class="w-4 h-4 mt-1 text-terracotta border-warmgray/30 rounded focus:ring-terracotta">
+                        <label for="terms" class="ml-2 text-sm text-warmgray">
+                            I agree to the 
+                            <a href="#" class="text-terracotta hover:text-terracotta-dark font-medium">Terms of Service</a> 
+                            and 
+                            <a href="#" class="text-terracotta hover:text-terracotta-dark font-medium">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <!-- Register Button -->
+                    <button type="submit" 
+                            class="w-full bg-terracotta text-white py-4 px-6 rounded-xl font-heading font-bold text-lg 
+                                   hover:bg-terracotta-dark transition-all duration-200 shadow-manuscript 
+                                   hover:shadow-manuscript-lg hover:-translate-y-0.5 flex items-center justify-center">
+                        Create Account
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </button>
+                </form>
+                
+                <!-- Divider -->
+                <div class="flex items-center my-8">
+                    <div class="flex-1 h-px bg-warmgray/20"></div>
+                    <span class="px-4 text-sm text-warmgray font-medium">OR</span>
+                    <div class="flex-1 h-px bg-warmgray/20"></div>
+                </div>
+                
+                <!-- Login Link -->
+                <div class="text-center">
+                    <p class="font-body text-warmgray">
+                        Already have an account? 
+                        <a href="{% url 'web:login' %}" class="text-terracotta font-heading font-bold hover:text-terracotta-dark transition-colors">
+                            Sign In
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
